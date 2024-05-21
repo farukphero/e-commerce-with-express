@@ -4,9 +4,13 @@ import { ProductControllers } from './product.controller';
 const router = express.Router();
 
 router
-  .get('/', ProductControllers.getAllProducts)
-  .post('/', ProductControllers.createProduct);
+  .route('/')
+  .get(ProductControllers.getAllProducts)
+  .post(ProductControllers.createProduct);
 
-router.get('/:productId', ProductControllers.getSingleProduct);
+router
+  .route('/:productId')
+  .get(ProductControllers.getSingleProduct)
+  .put(ProductControllers.updateProduct);
 
 export const ProductRoutes = router;
