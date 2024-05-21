@@ -23,7 +23,7 @@ const productValidationSchema = z.object({
     required_error: 'Product description is required',
   }),
   price: z
-    .number({ required_error: 'Quantity is required.' })
+    .number({ required_error: 'Price is required.' })
     .min(0, { message: 'Price can not be a negative number.' }),
   category: z.string({
     required_error: 'Category is required',

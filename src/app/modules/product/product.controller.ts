@@ -14,7 +14,7 @@ const createProduct = async (req: Request, res: Response) => {
       message: 'Product created successfully!',
       data: result,
     });
-  } catch (error) {
+  } catch (error: any) {
     if (error instanceof z.ZodError) {
       res
         .status(400)
@@ -25,36 +25,46 @@ const createProduct = async (req: Request, res: Response) => {
   }
 };
 
-// const getAllStudents = async (req: Request, res: Response) => {
-//   try {
-//     const result = await StudentServices.getAllStudentsFromDB();
+const getAllProducts = async (req: Request, res: Response) => {
+  try {
+    const result = await ProductServices.getAllProductsFromDB();
 
-//     res.status(200).json({
-//       success: true,
-//       message: 'Students are retrieved succesfully',
-//       data: result,
-//     });
-//   } catch (err) {
-//     console.log(err);
-//   }
-// };
+    res.status(200).json({
+      success: true,
+      message: 'Products fetched successfully!',
+      data: result,
+    });
+  } catch (error: any) {
+    res.status(200).json({
+      success: false,
+      message: 'Something went wrong!',
+      data: error,
+    });
+  }
+};
 
-// const getSingleStudent = async (req: Request, res: Response) => {
-//   try {
-//     const { studentId } = req.params;
+const getSingleProduct = async (req: Request, res: Response) => {
+  try {
+    const { productId } = req.params;
 
-//     const result = await StudentServices.getSingleStudentFromDB(studentId);
+    const result = await ProductServices.getSingleProductFromDB(productId);
 
-//     res.status(200).json({
-//       success: true,
-//       message: 'Student is retrieved succesfully',
-//       data: result,
-//     });
-//   } catch (err) {
-//     console.log(err);
-//   }
-// };
+    res.status(200).json({
+      success: true,
+      message: 'Product fetched successfully!',
+      data: result,
+    });
+  } catch (error) {
+    res.status(200).json({
+      success: false,
+      message: 'Something went wrong!',
+      data: error,
+    });
+  }
+};
 
 export const ProductControllers = {
   createProduct,
+  getAllProducts,
+  getSingleProduct,
 };
