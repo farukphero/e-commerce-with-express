@@ -9,7 +9,7 @@ const globalErrorHandle = (
 ) => {
   res.status(400).json({
     success: false,
-    message: error.message || 'Something went wrong',
+    message: JSON.parse(error.message) || 'Something went wrong',
     error: error || null,
   });
 };
