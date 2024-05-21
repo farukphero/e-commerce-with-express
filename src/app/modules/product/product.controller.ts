@@ -1,4 +1,3 @@
-import { z } from 'zod';
 import { NextFunction, Request, Response } from 'express';
 import { ProductServices } from './product.service';
 import productValidationSchema from './product.validation';
@@ -18,7 +17,7 @@ const createProduct = async (
       message: 'Product created successfully!',
       data: result,
     });
-  } catch (error: any) {
+  } catch (error) {
     next(error);
   }
 };
@@ -42,7 +41,7 @@ const getAllProducts = async (
         : 'Products fetched successfully!',
       data: result,
     });
-  } catch (error: any) {
+  } catch (error) {
     next(error);
   }
 };
@@ -97,7 +96,7 @@ const deleteProduct = async (
   try {
     const { productId } = req.params;
 
-    const result = await ProductServices.deleteProductFromDB(productId);
+    await ProductServices.deleteProductFromDB(productId);
 
     res.status(200).json({
       success: true,

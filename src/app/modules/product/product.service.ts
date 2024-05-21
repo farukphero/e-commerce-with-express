@@ -20,6 +20,11 @@ const getAllProductsFromDB = async (searchTerm?: string) => {
   }
 
   const result = await ProductModel.find(data);
+  if (result.length === 0) {
+    return {
+      message: 'No product found.',
+    };
+  }
 
   return result;
 };

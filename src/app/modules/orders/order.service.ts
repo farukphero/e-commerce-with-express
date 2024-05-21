@@ -1,3 +1,4 @@
+import { Error } from 'mongoose';
 import { ProductModel } from '../product/product.model';
 import { Order } from './order.interface';
 import { OrderModel } from './order.model';
@@ -13,7 +14,7 @@ const createOrderIntoDB = async (order: Order) => {
     await newOrder.save({ session });
 
     const product = await ProductModel.findById(productId).session(session);
-    console.log(product);
+
     if (!product) {
       await session.abortTransaction();
       session.endSession();
@@ -43,53 +44,40 @@ const createOrderIntoDB = async (order: Order) => {
       message: 'Order created successfully!',
       data: newOrder,
     };
-  } catch (error: any) {
-    if (error.name === 'CastError') {
+  } catch (error) {
+    if (isCastError(error)) {
       return {
         success: false,
-        message: 'No product found',
+        message: 'Order not found',
       };
     }
   }
 };
 
-// const getAllProductsFromDB = async (searchTerm?: string) => {
-//   let data;
-//   if (searchTerm) {
-//     data = {
-//       $or: [
-//         { name: { $regex: new RegExp(searchTerm, 'i') } },
-//         { description: { $regex: new RegExp(searchTerm, 'i') } },
-//       ],
-//     };
-//   } else {
-//     data = {};
-//   }
+const getAllOrdersFromDB = async (email?: string) => {
+  let data;
+  if (email) {
+    data = { email };
+  } else {
+    data = {};
+  }
 
-//   const result = await ProductModel.find(data);
+  const result = await OrderModel.find(data);
 
-//   return result;
-// };
+  if (result.length === 0) {
+    return {
+      message: 'No order found.',
+    };
+  }
 
-// const getSingleProductFromDB = async (id: string) => {
-//   const result = await ProductModel.findOne({ _id: id });
-//   return result;
-// };
-// const updateProductIntoDB = async (id: string, data: Product) => {
-//   const result = await ProductModel.findByIdAndUpdate(
-//     { _id: id },
-//     { $set: data },
-//     { new: true, runValidators: true },
-//   );
+  return result;
+};
 
-//   return result;
-// };
-// const deleteProductFromDB = async (id: string) => {
-//   const result = await ProductModel.deleteOne({ _id: id });
-
-//   return result;
-// };
+function isCastError(error: unknown): error is Error.CastError {
+  return (error as Error).name === 'CastError';
+}
 
 export const OrderServices = {
   createOrderIntoDB,
+  getAllOrdersFromDB,
 };

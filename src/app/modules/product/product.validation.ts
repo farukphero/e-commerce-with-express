@@ -10,8 +10,9 @@ const variantsValidationSchema = z.object({
 });
 
 const inventoryValidationSchema = z.object({
-  quantity: z.number({ required_error: 'Quantity is required.' }).min(0, 
-    { message: 'Quantity can not be a negative number.' }),
+  quantity: z
+    .number({ required_error: 'Quantity is required.' })
+    .min(0, { message: 'Quantity can not be a negative number.' }),
   inStock: z.boolean({ required_error: 'In-stock status is required.' }),
 });
 
@@ -29,7 +30,7 @@ const productValidationSchema = z.object({
     required_error: 'Category is required',
   }),
   tags: z.array(z.string(), {
-    required_error: 'At least one tag is required.'
+    required_error: 'At least one tag is required.',
   }),
   variants: z.array(variantsValidationSchema, {
     required_error: 'At least one variant is required.',
