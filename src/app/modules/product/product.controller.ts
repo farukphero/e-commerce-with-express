@@ -1,9 +1,13 @@
 import { z } from 'zod';
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { ProductServices } from './product.service';
 import productValidationSchema from './product.validation';
 
-const createProduct = async (req: Request, res: Response) => {
+const createProduct = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const product = productValidationSchema.parse(req.body);
 
@@ -15,35 +19,39 @@ const createProduct = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error: any) {
-    if (error instanceof z.ZodError) {
-      res
-        .status(400)
-        .json({ message: 'Validation error', errors: error.errors });
-    } else {
-      res.status(500).json({ message: 'Internal server error' });
-    }
+    next(error);
   }
 };
 
-const getAllProducts = async (req: Request, res: Response) => {
+const getAllProducts = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
-    const result = await ProductServices.getAllProductsFromDB();
+    const { searchTerm } = req.query;
+
+    const result = await ProductServices.getAllProductsFromDB(
+      searchTerm as string,
+    );
 
     res.status(200).json({
       success: true,
-      message: 'Products fetched successfully!',
+      message: searchTerm
+        ? `Products matching search term ${searchTerm} fetched successfully!`
+        : 'Products fetched successfully!',
       data: result,
     });
   } catch (error: any) {
-    res.status(200).json({
-      success: false,
-      message: 'Something went wrong!',
-      data: error,
-    });
+    next(error);
   }
 };
 
-const getSingleProduct = async (req: Request, res: Response) => {
+const getSingleProduct = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const { productId } = req.params;
 
@@ -55,14 +63,14 @@ const getSingleProduct = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    res.status(200).json({
-      success: false,
-      message: 'Something went wrong!',
-      data: error,
-    });
+    next(error);
   }
 };
-const updateProduct = async (req: Request, res: Response) => {
+const updateProduct = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const { productId } = req.params;
     const product = productValidationSchema.parse(req.body);
@@ -78,14 +86,14 @@ const updateProduct = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    res.status(200).json({
-      success: false,
-      message: 'Something went wrong!',
-      data: error,
-    });
+    next(error);
   }
 };
-const deleteProduct = async (req: Request, res: Response) => {
+const deleteProduct = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const { productId } = req.params;
 
@@ -97,11 +105,7 @@ const deleteProduct = async (req: Request, res: Response) => {
       data: null,
     });
   } catch (error) {
-    res.status(200).json({
-      success: false,
-      message: 'Something went wrong!',
-      data: error,
-    });
+    next(error);
   }
 };
 
@@ -110,5 +114,5 @@ export const ProductControllers = {
   getAllProducts,
   getSingleProduct,
   updateProduct,
-  deleteProduct
+  deleteProduct,
 };
