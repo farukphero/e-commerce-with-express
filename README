@@ -1,0 +1,29 @@
+# E-commerce with Express
+
+This is a simple e-commerce backend application built with TypeScript, Node.js, Express.js, Mongoose.  
+
+ 
+
+## Installation
+
+1. Clone the repository to your local machine:
+
+    git clone https://github.com/farukphero/e-commerce-with-express
+    cd e-commerce-with-express
+    
+
+2. Install the dependencies:
+
+    npm install
+
+## Running the Application
+
+1. Start the server:
+
+ 
+   npm run start:dev
+ 
+
+2. The server will start running on port 5000 by default.
+
+

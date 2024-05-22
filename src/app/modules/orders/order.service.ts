@@ -32,6 +32,14 @@ const createOrderIntoDB = async (order: Order) => {
         message: 'Insufficient quantity available in inventory',
       };
     }
+    if (quantity === 0) {
+      await session.abortTransaction();
+      session.endSession();
+      return {
+        success: false,
+        message: 'Quantity can not be 0',
+      };
+    }
     product.inventory.quantity -= quantity;
     product.inventory.inStock = product.inventory.quantity > 0;
     await product.save({ session });

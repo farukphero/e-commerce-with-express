@@ -17,9 +17,12 @@ app.use('/api/orders', OrderRoutes);
 app.get('/', (req: Request, res: Response) => {
   res.send('E-commerce with express start.');
 });
+
+// handle route that is not exist 
 app.use((req: Request, res: Response) => {
   res.status(404).json({ success: false, message: 'Route not found.' });
 });
 
+// handle global error 
 app.use(globalErrorHandle);
 export default app;
