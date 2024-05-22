@@ -1,8 +1,8 @@
-import { Product } from './product.interface';
-import { ProductModel } from './product.model';
+import { TProduct } from './product.interface';
+import { Product } from './product.model';
 
-const createProductIntoDB = async (product: Product) => {
-  const result = await ProductModel.create(product);
+const createProductIntoDB = async (product: TProduct) => {
+  const result = await Product.create(product);
   return result;
 };
 
@@ -19,7 +19,7 @@ const getAllProductsFromDB = async (searchTerm?: string) => {
     data = {};
   }
 
-  const result = await ProductModel.find(data);
+  const result = await Product.find(data);
   if (result.length === 0) {
     return {
       message: 'No product found.',
@@ -30,11 +30,11 @@ const getAllProductsFromDB = async (searchTerm?: string) => {
 };
 
 const getSingleProductFromDB = async (id: string) => {
-  const result = await ProductModel.findOne({ _id: id });
+  const result = await Product.findOne({ _id: id });
   return result;
 };
-const updateProductIntoDB = async (id: string, data: Product) => {
-  const result = await ProductModel.findByIdAndUpdate(
+const updateProductIntoDB = async (id: string, data: TProduct) => {
+  const result = await Product.findByIdAndUpdate(
     { _id: id },
     { $set: data },
     { new: true, runValidators: true },
@@ -43,7 +43,7 @@ const updateProductIntoDB = async (id: string, data: Product) => {
   return result;
 };
 const deleteProductFromDB = async (id: string) => {
-  const result = await ProductModel.deleteOne({ _id: id });
+  const result = await Product.deleteOne({ _id: id });
 
   return result;
 };

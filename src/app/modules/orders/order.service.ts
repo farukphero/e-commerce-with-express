@@ -1,19 +1,19 @@
 import { Error } from 'mongoose';
-import { ProductModel } from '../product/product.model';
-import { Order } from './order.interface';
-import { OrderModel } from './order.model';
+import { Product } from '../product/product.model';
+import { TOrder } from './order.interface';
+import { Order } from './order.model';
 
-const createOrderIntoDB = async (order: Order) => {
-  const session = await OrderModel.startSession();
+const createOrderIntoDB = async (order: TOrder) => {
+  const session = await Order.startSession();
   session.startTransaction();
 
   try {
     const { productId, quantity } = order;
 
-    const newOrder = new OrderModel(order);
+    const newOrder = new Order(order);
     await newOrder.save({ session });
 
-    const product = await ProductModel.findById(productId).session(session);
+    const product = await Product.findById(productId).session(session);
 
     if (!product) {
       await session.abortTransaction();
@@ -70,7 +70,7 @@ const getAllOrdersFromDB = async (email?: string) => {
     data = {};
   }
 
-  const result = await OrderModel.find(data);
+  const result = await Order.find(data);
 
   if (result.length === 0) {
     return {

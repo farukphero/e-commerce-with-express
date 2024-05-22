@@ -1,11 +1,11 @@
 import { Schema, model } from 'mongoose';
-import { Order } from './order.interface';
+import { TOrder } from './order.interface';
 
-const orderSchema = new Schema<Order>({
+const orderSchema = new Schema<TOrder>({
   email: { type: String, required: true },
   productId: { type: String, required: true },
   price: { type: Number, required: true },
   quantity: { type: Number, required: true },
 });
 
-export const OrderModel = model<Order>('Order', orderSchema);
+export const Order = model<TOrder>('Order', orderSchema);
