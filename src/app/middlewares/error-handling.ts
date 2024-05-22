@@ -5,7 +5,7 @@ const globalErrorHandle = (
   error: Error,
   _req: Request,
   res: Response,
-  _next: NextFunction,
+  _next: NextFunction, // eslint-disable-line @typescript-eslint/no-unused-vars
 ) => {
   res.status(400).json({
     success: false,
